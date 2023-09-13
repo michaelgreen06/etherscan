@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import AccountSearch from "./Components/AccountSearch";
+import { useState, useEffect } from "react";
+import SignerSearch from "./Components/SignerSearch";
 
 function App() {
+  [account, setAccount] = useState("");
+  [signer, setSigner] = useState("");
+  useEffect(() => {});
+  const handleAccountChange = () => {}; //in here I'll setAccountChange state to e.target.value
+  const handleSignerChange = () => {}; //in here I'll setSignerChange state to e.target.value
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Awesome React Eth Transaction Tracker</h1>
+      <AccountSearch
+        accountChange={handleAccountChange}
+        accountValue={account}
+      />
+      <SignerSearch
+        signerChange={handleSignerChange}
+        signerValue={signer}
+      />
     </div>
   );
 }
 
 export default App;
+
+//9/13/23 left off finding how to convert wei to eth. card needs to be updated to contain this logic
