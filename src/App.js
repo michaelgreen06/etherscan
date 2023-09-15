@@ -5,16 +5,29 @@ import SignerSearch from "./Components/SignerSearch";
 import CardList from "./Components/CardList";
 
 function App() {
-  const [account, setAccount] = useState("");
-  const [signer, setSigner] = useState("");
+  const [account, setAccount] = useState("0x19e50fa5623895d5a2976693eaff5c2f879510ed");
+  const [signer, setSigner] = useState("0x");
   const [transactions, setTransactions] = useState([]);
   useEffect(() => {
-    fetch(
-      `https://api.etherscan.io/api?module=account&action=txlist&address=${account}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=S58AX7RGE8H35RT8QXD4RQ2A427RQF7B1M`
-    )
-      .then((response) => response.json())
-      .then((result) => setTransactions(result));
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          `https://api.etherscan.io/api?module=account&action=txlist&address=${account}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=S58AX7RGE8H35RT8QXD4RQ2A427RQF7B1M`
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setTransactions(data.result);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchData();
   }, [account]);
+
   const handleAccountChange = (e) => {
     setAccount(e.target.value);
   };
@@ -27,7 +40,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="tc">
       <h1>Awesome React Eth Transaction Tracker</h1>
       <AccountSearch
         accountChange={handleAccountChange}
@@ -44,5 +57,23 @@ function App() {
 
 export default App;
 
-//9/14/23 left off updating the dependency array of useEffect to update when account is changed
-// Also not sure if filtered transactions is correct
+//9/15/23 app "works" but could use many improvements
+//next time try to reuse old .then fetch code
+
+// async function fetchData() {
+//   try {
+//     const response = await fetch(
+//       `https://api.etherscan.io/api?module=account&action=txlist&address=0x19e50fa5623895d5a2976693eaff5c2f879510ed&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=S58AX7RGE8H35RT8QXD4RQ2A427RQF7B1M`
+//     );
+
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+
+//     const data = await response.json();
+//     console.log(data.result); // You can do something with the fetched data here
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// }
+// fetchData();
