@@ -5,9 +5,12 @@ import SignerSearch from "./Components/SignerSearch";
 import CardList from "./Components/CardList";
 
 function App() {
-  const [account, setAccount] = useState("0x19e50fa5623895d5a2976693eaff5c2f879510ed");
-  const [signer, setSigner] = useState("0x");
-  const [transactions, setTransactions] = useState([]);
+  const [account, setAccount] = useState("");
+  const [signer, setSigner] = useState("");
+  const [transactions, setTransactions] = useState({
+    status: 0,
+    result: [],
+  });
   useEffect(() => {
     async function fetchData() {
       try {
@@ -19,7 +22,7 @@ function App() {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setTransactions(data.result);
+        setTransactions(data);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -35,23 +38,29 @@ function App() {
     setSigner(e.target.value);
   };
 
-  let filteredTransactions;
-  if (transactions === "Error! Invalid address format") {
-    return (filteredTransactions = []);
-  } else {
-    filteredTransactions = transactions.filter(filterFunc);
+  let filteredTransactions = [];
+  if (Array.isArray(transactions.result)) {
+    filteredTransactions = transactions.result.filter(filterFunc);
     function filterFunc(transaction) {
       return transaction.from.includes(signer.toLowerCase());
     }
   }
 
-  // const filteredTransactions = transactions.filter(filterFunc);
-  // function filterFunc(transaction) {
-  //   return transaction.from.includes(signer.toLowerCase());
-  // }
-
   if (filteredTransactions.length === 0) {
-    return <h1>Enter MultiSig Address to fetch transactions</h1>;
+    return (
+      <div className="tc">
+        <h1>Enter MultiSig Address to fetch transactions</h1>
+        <AccountSearch
+          accountChange={handleAccountChange}
+          accountValue={account}
+        />
+        <SignerSearch
+          signerChange={handleSignerChange}
+          signerValue={signer}
+        />
+        <CardList transactions={filteredTransactions} />
+      </div>
+    );
   } else {
     return (
       <div className="tc">
@@ -72,16 +81,12 @@ function App() {
 
 export default App;
 
-//9/19/23 finish fixing the code so that the state can be null initially which then shows the "enter multi.." message
+//9/20/23 work on the below issues:
 
 //issues to fix:
 //1). timestamp is wrong
 //2). Want at least 2 cards per line
 //3). Want to sum total eth spent
-//4). initial state should work w/o using passport multisig - eg should say enter wallet address to populate
+//4). initial state should work w/o using passport multisig - eg should say enter wallet address to populate (done 9/19/23)
 //5). Set up the api key as an env (process.env)
 //6). change the favicon
-
-//1). I need to write an if statement that renders a "loading" screen if a multisig address isn't entered in
-//I don't know where I need to write this if statement. I'm thinking that writing it in the JSX will be best
-//because then it will be easy for me to tell it what to do <h1> enter multisig address to see transaction</h1>
