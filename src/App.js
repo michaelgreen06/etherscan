@@ -6,7 +6,7 @@ import CardList from "./Components/CardList";
 import TotalGas from "./Components/TotalGas";
 
 function App() {
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useState("0x19e50fa5623895d5a2976693eaff5c2f879510ed");
   const [signer, setSigner] = useState("");
   const [transactions, setTransactions] = useState({
     status: 0,
@@ -46,51 +46,31 @@ function App() {
     }
   }
 
+  let heading;
   if (filteredTransactions.length === 0) {
-    return (
-      <div className="tc">
-        <h1>Enter MultiSig Address to fetch transactions</h1>
-        <AccountSearch
-          accountChange={handleAccountChange}
-          accountValue={account}
-        />
-        <SignerSearch
-          signerChange={handleSignerChange}
-          signerValue={signer}
-        />
-        <CardList transactions={filteredTransactions} />
-      </div>
-    );
+    heading = <h1>Enter MultiSig Address to Fetch Transactions</h1>;
   } else {
-    return (
-      <div className="tc">
-        <h1>Awesome React Eth Transaction Tracker</h1>
-        <TotalGas transactions={filteredTransactions} />
-        <AccountSearch
-          accountChange={handleAccountChange}
-          accountValue={account}
-        />
-        <SignerSearch
-          signerChange={handleSignerChange}
-          signerValue={signer}
-        />
-        <CardList transactions={filteredTransactions} />
-      </div>
-    );
+    heading = <h1>Awesome React Eth Transaction Tracker</h1>;
   }
+  //we can only use expressions w/in JSX. Statements need to be outside of JSX
+  return (
+    <div className="tc">
+      {heading}
+      <TotalGas transactions={filteredTransactions} />
+      <AccountSearch
+        accountChange={handleAccountChange}
+        accountValue={account}
+      />
+      <SignerSearch
+        signerChange={handleSignerChange}
+        signerValue={signer}
+      />
+      <CardList transactions={filteredTransactions} />
+    </div>
+  );
 }
 
 export default App;
 
-//9/21/23 figure out how to get TotalGas component working:
-
 //issues to fix:
-//3). Want to sum total eth spent
 //5). Set up the api key as an env (process.env)
-//7). Cleanup app return statement
-
-//summing the total amount of eth will require some thought. I could always sum the amount of eth spent even if
-//the transactions aren't sorted by signer. This is def the MVP. I think I make a new component to sum the amount of eth gas
-//It will be above the other cards. Maybe it'll just be an h1. it will need to access the gas used and gasprice for all
-//transactions that are currently showing. Currently this data is only showing up in card but I think I can import it
-//into a new component as props just I have imported it into Card.

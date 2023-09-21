@@ -5,7 +5,7 @@ const Card = ({ hash, from, gasUsed, gasPrice, time }) => {
   const dateObject = new Date(millisec);
   const formatDate = dateObject.toLocaleString();
   return (
-    <div className="dib pa2 bg-lightest-blue ma2 grow br4">
+    <div className="dib pa2 bg-lightest-blue ma2 br4">
       <img
         alt="Robot Representing a Transaction"
         src={`https://robohash.org/${hash}?size=200x200`}

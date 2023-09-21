@@ -2,14 +2,12 @@ import React from "react";
 
 const TotalGas = ({ transactions }) => {
   let total = 0;
-
   for (let i = 0; i < transactions.length; i++) {
-    total += (transactions.gasUsed[i] * transactions.gasPrice[i]) / 1e18;
-    return total;
+    total = total + (transactions[i].gasUsed * transactions[i].gasPrice) / 1e18;
   }
   return (
     <>
-      <h1>Total Gas used:{total}</h1>
+      <h2>Total Gas Used: {total} ETH</h2>
     </>
   );
 };
